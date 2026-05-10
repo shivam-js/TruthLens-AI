@@ -28,10 +28,7 @@ function App() {
   };
 
   useEffect(() => {
-    const loadNews = async () => {
-      await fetchNews();
-    };
-    loadNews();
+    fetchNews();
   }, []);
 
   const analyzeClaim = async (textToAnalyze) => {
@@ -39,7 +36,7 @@ function App() {
 
     if (!finalClaim) {
       alert("Please enter a claim");
-      return;
+      return null;
     }
 
     const response = await fetch(`${API_BASE_URL}/api/news/analyze`, {
@@ -53,10 +50,8 @@ function App() {
     return response.json();
   };
 
-  const handleSubmit = async (customClaim = null) => {
-    const finalClaim = String(customClaim || claim || "").trim();
-
-    if (!finalClaim) {
+  const handleSubmit = async () => {
+    if (!claim.trim()) {
       alert("Please enter a claim");
       return;
     }
@@ -66,14 +61,14 @@ function App() {
       setPhase("Analyzing claim...");
       setMessage("Analyzing...");
 
-      const data = await analyzeClaim(finalClaim);
+      const data = await analyzeClaim(claim);
 
-      if (data.success) {
+      if (data?.success) {
         setMessage("Quick AI response ⚡");
         setClaim("");
         await fetchNews();
       } else {
-        setMessage(data.message || "Error saving claim ❌");
+        setMessage(data?.message || "Analysis failed ❌");
       }
     } catch (error) {
       console.error("Text analysis error:", error);
@@ -105,25 +100,27 @@ function App() {
 
       const data = await response.json();
 
-      if (data.success) {
-        const extracted = data.extractedText || "";
-        setExtractedText(extracted);
-
-        if (extracted.trim()) {
-          setPhase("Verifying extracted text...");
-          const analyzeData = await analyzeClaim(extracted);
-
-          if (analyzeData.success) {
-            setMessage("Image analyzed successfully ✅");
-            await fetchNews();
-          } else {
-            setMessage(analyzeData.message || "Image text verification failed ❌");
-          }
-        } else {
-          setMessage("No readable text found in image ❌");
-        }
-      } else {
+      if (!data.success) {
         setMessage(data.message || "Image analysis failed ❌");
+        return;
+      }
+
+      const extracted = data.extractedText || "";
+      setExtractedText(extracted);
+
+      if (!extracted.trim()) {
+        setMessage("No readable text found in image ❌");
+        return;
+      }
+
+      setPhase("Verifying extracted text...");
+      const analyzeData = await analyzeClaim(extracted);
+
+      if (analyzeData?.success) {
+        setMessage("Image analyzed successfully ✅");
+        await fetchNews();
+      } else {
+        setMessage(analyzeData?.message || "Image text verification failed ❌");
       }
     } catch (error) {
       console.error("Image analysis error:", error);
@@ -155,25 +152,27 @@ function App() {
 
       const data = await response.json();
 
-      if (data.success) {
-        const extracted = data.extractedText || "";
-        setFileText(extracted);
-
-        if (extracted.trim()) {
-          setPhase("Verifying extracted file text...");
-          const analyzeData = await analyzeClaim(extracted);
-
-          if (analyzeData.success) {
-            setMessage("File analyzed successfully ✅");
-            await fetchNews();
-          } else {
-            setMessage(analyzeData.message || "File text verification failed ❌");
-          }
-        } else {
-          setMessage("No readable text found in file ❌");
-        }
-      } else {
+      if (!data.success) {
         setMessage(data.message || "File analysis failed ❌");
+        return;
+      }
+
+      const extracted = data.extractedText || "";
+      setFileText(extracted);
+
+      if (!extracted.trim()) {
+        setMessage("No readable text found in file ❌");
+        return;
+      }
+
+      setPhase("Verifying extracted file text...");
+      const analyzeData = await analyzeClaim(extracted);
+
+      if (analyzeData?.success) {
+        setMessage("File analyzed successfully ✅");
+        await fetchNews();
+      } else {
+        setMessage(analyzeData?.message || "File text verification failed ❌");
       }
     } catch (error) {
       console.error("File analysis error:", error);
@@ -204,6 +203,25 @@ function App() {
     }
   };
 
+  const renderSources = (sources) => {
+    if (!Array.isArray(sources) || sources.length === 0) return null;
+
+    return (
+      <div>
+        <strong>Sources:</strong>
+        <ul>
+          {sources.map((source, index) => (
+            <li key={index}>
+              <a href={source} target="_blank" rel="noreferrer">
+                Source {index + 1}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
   return (
     <div className="app">
       <div className="container">
@@ -220,7 +238,7 @@ function App() {
 
         <br />
 
-        <button onClick={() => handleSubmit()} disabled={loading}>
+        <button onClick={handleSubmit} disabled={loading}>
           {loading ? "Analyzing..." : "Analyze"}
         </button>
 
@@ -273,13 +291,13 @@ function App() {
           <p>No claims saved yet.</p>
         ) : (
           newsList.map((item, index) => {
-            const analysisArray = (() => {
-              try {
-                return JSON.parse(item.explanation);
-              } catch {
-                return null;
-              }
-            })();
+            let analysisArray = null;
+
+            try {
+              analysisArray = JSON.parse(item.explanation);
+            } catch {
+              analysisArray = null;
+            }
 
             return (
               <div key={item._id || index} className="claim-card">
@@ -317,39 +335,7 @@ function App() {
                         {claimItem.credibilityScore ?? "N/A"}/100
                       </p>
 
-                      {item.sources?.length > 0 && (
-                          <div>
-                            <strong>Sources:</strong>
-                            <ul>
-                              {item.sources.map((source, sourceIndex) => (
-                                <li key={sourceIndex}>
-                                  <a href={source} target="_blank" rel="noreferrer">
-                                    Source {sourceIndex + 1}
-                                  </a>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-
-                      {claimItem.sources?.length > 0 && (
-                        <div>
-                          <strong>Sources:</strong>
-                          <ul>
-                            {claimItem.sources.map((source, sourceIndex) => (
-                              <li key={sourceIndex}>
-                                <a
-                                  href={source}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  Source {sourceIndex + 1}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
+                      {renderSources(claimItem.sources || item.sources)}
                     </div>
                   ))
                 ) : (
@@ -369,6 +355,8 @@ function App() {
                       <strong>Credibility Score:</strong>{" "}
                       {item.credibilityScore ?? "N/A"}/100
                     </p>
+
+                    {renderSources(item.sources)}
                   </>
                 )}
 
