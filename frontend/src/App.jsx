@@ -317,6 +317,21 @@ function App() {
                         {claimItem.credibilityScore ?? "N/A"}/100
                       </p>
 
+                      {item.sources?.length > 0 && (
+                          <div>
+                            <strong>Sources:</strong>
+                            <ul>
+                              {item.sources.map((source, sourceIndex) => (
+                                <li key={sourceIndex}>
+                                  <a href={source} target="_blank" rel="noreferrer">
+                                    Source {sourceIndex + 1}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
                       {claimItem.sources?.length > 0 && (
                         <div>
                           <strong>Sources:</strong>
