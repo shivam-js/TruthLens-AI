@@ -13,6 +13,7 @@ dotenv.config();
 const app = express();
 
 const allowedOrigins = [
+  "https://truthlenss-ai.netlify.app",
   "https://truthlens-ai.netlify.app",
   "http://localhost:5173",
   "http://localhost:5174",
