@@ -14,7 +14,7 @@ function App() {
 
   const fetchNews = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/news");
+      const response = await fetch("https://truthlens-ai-production-021a.up.railway.app/api/news");
       const data = await response.json();
 
       if (data.success) {
@@ -45,7 +45,7 @@ function App() {
     setLoading(true);
     setMessage("Analyzing...");
 
-    const response = await fetch("http://localhost:5000/api/news/analyze", {
+    const response = await fetch("https://truthlens-ai-production-021a.up.railway.app/api/news/analyze", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -72,7 +72,7 @@ function App() {
 
   const handleDelete = async (id) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/news/${id}`, {
+    const response = await fetch(`https://truthlens-ai-production-021a.up.railway.app/api/news/${id}`, {
       method: "DELETE",
     });
 
@@ -104,7 +104,7 @@ function App() {
     setLoading(true);
     setMessage("Extracting text from image...");
 
-    const response = await fetch("http://localhost:5000/api/image/analyze", {
+    const response = await fetch("https://truthlens-ai-production-021a.up.railway.app/api/image/analyze", {
       method: "POST",
       body: formData,
     });
@@ -140,7 +140,7 @@ function App() {
     setLoading(true);
     setMessage("Extracting text from file...");
 
-    const response = await fetch("http://localhost:5000/api/file/analyze", {
+    const response = await fetch("https://truthlens-ai-production-021a.up.railway.app/api/file/analyze", {
       method: "POST",
       body: formData,
     });
