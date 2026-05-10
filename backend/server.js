@@ -15,15 +15,18 @@ const app = express();
 
 // Middleware
 app.use(
-    cors({
-      origin: [
-        "http://localhost:5173",
-        "https://truthlenss-ai.netlify.app",
-      ],
-      methods: ["GET", "POST", "DELETE", "PUT"],
-      credentials: true,
-    })
-  );
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://truthlenss-ai.netlify.app",
+    ],
+    methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
+app.options("*", cors());
 app.use(express.json());
 app.use("/api/news", newsRoutes);
 app.use("/api/image", imageRoutes);
