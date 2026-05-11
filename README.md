@@ -80,3 +80,10 @@ Backend API: https://truthlens-ai-production-021a.up.railway.app
 
 ```bash
 git clone https://github.com/shivam-js/TruthLens-AI.git
+
+👨‍💻 Developer
+Shivam Prasad
+
+Final-year developer passionate about Full Stack Development, AI Integration, and scalable real-world applications.
+
+GitHub: https://github.com/shivam-js
