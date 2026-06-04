@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-const API_BASE_URL = "https://truthlens-ai-production-021a.up.railway.app";
+const API_BASE_URL = "https://truthlens-ai-backend-vs64.onrender.com";
 
 function App() {
   const [claim, setClaim] = useState("");
