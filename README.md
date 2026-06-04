@@ -11,7 +11,7 @@ TruthLens-AI allows users to input text or documents and get AI-based insights o
 
 Frontend: (https://truthlenss-ai.netlify.app/)
 
-Backend API: https://truthlens-ai-production-021a.up.railway.app
+Backend API: (https://truthlens-ai-backend-vs64.onrender.com)
 
 ---
 
