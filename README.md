@@ -50,7 +50,7 @@ Backend API: (https://truthlens-ai-backend-vs64.onrender.com)
 
 ## Deployment
 - Netlify (Frontend)
-- Railway (Backend)
+- Render (Backend)
 
 ---
 
