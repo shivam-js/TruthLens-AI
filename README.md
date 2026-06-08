@@ -47,7 +47,8 @@ Backend API: (https://truthlens-ai-backend-vs64.onrender.com)
 - OCR-based text extraction
 - AI verification pipeline
 - File parsing for PDF/DOCX analysis
-- Retrieval Augmented Generation 
+- Retrieval Augmented Generation (RAG)
+- LLM APIs
 
 ## Deployment
 - Netlify (Frontend)
